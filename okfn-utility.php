@@ -11,7 +11,7 @@ class OKFN_Utility {
 
         // Transparency for Cookie notification bar
         add_action( 'init', array( get_class(), 'cookie_notification_styles' ) );
-        add_action( 'init', array( get_class(), 'force_cookie_policy_page_creation' ) );
+//        add_action( 'init', array( get_class(), 'force_cookie_policy_page_creation' ) );
         
     } // end init
 	
