@@ -58,7 +58,7 @@ class OKFN_Utility {
         function cookie_policy_global_page($content, $options) {
             $regex = '/https?\:\/\/[^\" ]+/i';
             $content = str_replace('<a', '<a target="_blank"', $content);
-            return preg_replace($regex, network_home_url() . '/cookie-policy' , $content);
+            return preg_replace($regex, network_home_url() . 'cookie-policy' , $content);
         }
         
   
