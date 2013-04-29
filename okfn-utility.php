@@ -12,6 +12,7 @@ class OKFN_Utility {
         // Transparency for Cookie notification bar
         add_action( 'init', array( get_class(), 'cookie_notification_styles' ) );
 //        add_action( 'init', array( get_class(), 'force_cookie_policy_page_creation' ) );
+        add_filter( 'catapult_cookie_content', array( get_class(), 'cookie_policy_global_page' ), 10, 2 );
         
     } // end init
 	
@@ -52,6 +53,12 @@ class OKFN_Utility {
                 catapult_cookie_options_page();
                 ob_end_clean();
             }
+        }
+        
+        function cookie_policy_global_page($content, $options) {
+            $regex = '/https?\:\/\/[^\" ]+/i';
+            $content = str_replace('<a', '<a target="_blank"', $content);
+            return preg_replace($regex, network_home_url() . '/cookie-policy' , $content);
         }
         
   
