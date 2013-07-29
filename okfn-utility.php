@@ -111,7 +111,7 @@ class OKFN_Utility {
 
     function password_reset_login_notice( $message ) {
         if ( empty($message) ){
-            return '<p style="margin-bottom: 10px;">Be advised, due to a server migration all passwords on this system were reset on July 27th, 2013. If you haven\'t done so you, please use the "Lost Your Password" link below to set your own password.</p>';
+            return "<p style='margin-bottom: 10px;'>Be advised, due to a server migration all passwords on this system were reset on July 27th, 2013. If you haven't done so you, please use the 'Lost Your Password' link below to set your own password.</p>";
         } 
         else {
             return $message;
