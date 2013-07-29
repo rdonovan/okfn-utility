@@ -23,6 +23,7 @@ class OKFN_Utility {
         add_filter( 'login_message', array ( get_class(),  'password_reset_login_notice') );
 
         add_filter( 'wp_footer', array ( get_class(),  'pagely_footer_notice') );
+        add_filter( 'allow_password_reset', array ( get_class(),  'disable_reset_lost_password') );
         
         
     } // end init
@@ -111,7 +112,7 @@ class OKFN_Utility {
 
     function password_reset_login_notice( $message ) {
         if ( empty($message) ){
-            return "<p style='margin-bottom: 10px;'>Be advised, due to a server migration all passwords on this system were reset on July 27th, 2013. If you haven't done so you, please use the 'Lost Your Password' link below to set your own password.</p>";
+            return "<p style='margin-bottom: 10px;'>Be advised, due to a server migration all passwords on this system were reset on July 27th, 2013. If you haven't done so yet, please use the 'Lost Your Password' link below to set your own password.</p>";
         } 
         else {
             return $message;
@@ -125,6 +126,13 @@ class OKFN_Utility {
             include( $okfn_utility->plugin_dir . '/views/pagely-footer-notice.php' );
         }
     }
+
+    function disable_reset_lost_password() {
+        if ( DB_NAME == 'db_dom4659' ) {
+            return false;
+        }
+    }
+ 
         
   
 } // end class
