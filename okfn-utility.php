@@ -19,6 +19,8 @@ class OKFN_Utility {
         add_action( 'wpmu_options', array( get_class(), 'lock_login_network_options_display' ) );
         add_action( 'update_wpmu_options' , array( get_class(), 'lock_login_network_options_save' ) );
         add_filter( 'authenticate' , array( get_class(), 'lock_login_action' ), 100, 3 );
+
+        add_filter( 'login_message', array ( get_class(),  'password_reset_login_notice') );
         
         
     } // end init
@@ -103,6 +105,16 @@ class OKFN_Utility {
         }
 
         return $user;
+    }
+
+    function password_reset_login_notice( $message ) {
+        if ( empty($message) ){
+            return '<p style="margin-bottom: 10px;">Be advised, all passwords on this system were reset on July 27th, 2013. Please use the "Lost Your Password" link below to set your own password.</p>';
+        } 
+        else {
+            return $message;
+        }
+
     }
         
   
