@@ -23,7 +23,7 @@ class OKFN_Utility {
         add_filter( 'login_message', array ( get_class(),  'password_reset_login_notice') );
 
         add_filter( 'wp_footer', array ( get_class(),  'pagely_footer_notice') );
-        add_filter( 'allow_password_reset', array ( get_class(),  'disable_reset_lost_password') );
+        // add_filter( 'allow_password_reset', array ( get_class(),  'disable_reset_lost_password') );
         
         
     } // end init
@@ -131,6 +131,7 @@ class OKFN_Utility {
         if ( DB_NAME == 'db_dom4659' ) {
             return false;
         }
+        else return true;
     }
  
         
