@@ -21,6 +21,8 @@ class OKFN_Utility {
         add_filter( 'authenticate' , array( get_class(), 'lock_login_action' ), 100, 3 );
 
         add_filter( 'login_message', array ( get_class(),  'password_reset_login_notice') );
+
+        add_filter( 'wp_footer', array ( get_class(),  'pagely_footer_notice') );
         
         
     } // end init
@@ -115,6 +117,13 @@ class OKFN_Utility {
             return $message;
         }
 
+    }
+
+    function pagely_footer_notice() {
+        if ( DB_NAME == 'db_dom4659' ) {
+            global $okfn_utility;
+            include( $okfn_utility->plugin_dir . '/views/pagely-footer-notice.php' );
+        }
     }
         
   
