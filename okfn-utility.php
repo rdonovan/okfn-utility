@@ -53,7 +53,7 @@ class OKFN_Utility {
 	
     function cookie_notification_styles() {
         if ( function_exists( catapult_add_cookie_bar ) ) {
-            wp_enqueue_style( 'okf-transparent-cookie-bar', plugin_dir_url( __FILE__ ) . 'css/cookie-bar.css', false, false);
+            wp_enqueue_style( 'okf-transparent-cookie-bar', trailingslashit(WPMU_PLUGIN_URL) . self::SLUG . '/css/cookie-bar.css', false, false);
         }
     }
     
