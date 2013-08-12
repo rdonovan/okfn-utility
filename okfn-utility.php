@@ -132,8 +132,7 @@ class OKFN_Utility {
             return false;
         }
         else return true;
-    }
- 
+    } 
         
   
 } // end class

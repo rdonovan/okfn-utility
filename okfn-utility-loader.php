@@ -28,5 +28,6 @@ License:
 
 $okfn_utility_inc_dir = ( WPMU_PLUGIN_DIR == dirname(__FILE__) ) ? WPMU_PLUGIN_DIR . '/okfn-utility' : dirname(__FILE__);
 require_once( $okfn_utility_inc_dir . '/okfn-utility.php' );
+require_once( $okfn_utility_inc_dir . '/okfn-utility-functions.php' );
 $GLOBALS['okfn_utility'] = new OKFN_Utility();
 $GLOBALS['okfn_utility']->init();
