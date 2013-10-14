@@ -24,7 +24,8 @@ class OKFN_Utility {
 
         add_filter( 'wp_footer', array ( get_class(),  'pagely_footer_notice') );
         // add_filter( 'allow_password_reset', array ( get_class(),  'disable_reset_lost_password') );
-        
+
+        // add_action( 'init', array( get_class(), 'user_blog_checker_checker' ) );
         
     } // end init
 
@@ -133,6 +134,68 @@ class OKFN_Utility {
         }
         else return true;
     } 
+
+
+    function user_blog_checker_checker() {
+        global $wpdb;
+
+        $count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->users" );
+        $batch = 200;
+        $offset = 0;
+        $inactive_users = 0;
+
+
+        $filename = sanitize_title_with_dashes('Inactive User Export') . "-" . gmdate("Y-m-d", time()) . ".csv";
+        $charset = get_option('blog_charset');
+        $lines = chr(239) . chr(187) . chr(191);
+        $separator = ',';
+
+        $fields = array(
+            'ID',
+            'user_login',
+            'user_email'
+        );
+
+        header('Content-Description: File Transfer');
+        header("Content-Disposition: attachment; filename=$filename");
+        header('Content-Type: text/plain; charset=' . $charset, true);
+        ob_clean();
+
+        foreach ( $fields as $field_label ) {
+            $lines .= '"' . str_replace('"', '""', $field_label) . '"' . $separator;
+        }
+        $lines.= "\n";
+        
+        
+        for ( $i = 1; $i <= ($count/$batch); $i++ ) {
+        // for ( $i = 1; $i <= 2; $i++ ) {
+            $users = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $wpdb->users LIMIT %d, %d", $offset, $batch) );
+            if ($users) {
+                foreach ($users as $user) {
+                    $user_blogs = get_blogs_of_user($user->ID);
+
+                    if (empty( $user_blogs )) {
+                        foreach ($fields as $field) {
+                            $lines .= '"' . str_replace('"', '""', $user->$field) . '"' . $separator;
+                        }
+                        // $inactive_users++;
+                    }
+                    $lines = substr($lines, 0, strlen($lines)-1);
+                    $lines.= "\n";
+                }
+            }
+            
+            $offset += $batch;
+            if ( !seems_utf8( $lines ) )
+                $lines = utf8_encode( $lines );
+
+            echo $lines;
+            $lines = "";
+        }
+        // echo $inactive_users;
+        die();
+
+    }
         
   
 } // end class
