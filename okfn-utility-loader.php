@@ -28,6 +28,11 @@ License:
 
 $okfn_utility_inc_dir = ( WPMU_PLUGIN_DIR == dirname(__FILE__) ) ? WPMU_PLUGIN_DIR . '/okfn-utility' : dirname(__FILE__);
 require_once( $okfn_utility_inc_dir . '/okfn-utility.php' );
+require_once( $okfn_utility_inc_dir . '/inactive-users.class.php' );
+require_once( $okfn_utility_inc_dir . '/inactive-users-list.class.php' );
 require_once( $okfn_utility_inc_dir . '/okfn-utility-functions.php' );
 $GLOBALS['okfn_utility'] = new OKFN_Utility();
 $GLOBALS['okfn_utility']->init();
+
+$GLOBALS['okf_inactive_users'] = new OKF_Inactive_Users();
+$GLOBALS['okf_inactive_users']->init();
