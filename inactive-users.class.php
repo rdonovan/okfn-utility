@@ -38,10 +38,11 @@ class OKF_Inactive_Users {
         
         function build_user_list_array($users = false) {
             global $wpdb;
+            ini_set('memory_limit','512M');
 
             $this->inactive_count = 0;
             $this->user_list = array();
-            $limit = 2000;
+            $limit = 1000;
 
             $users = $wpdb->get_col( "SELECT ID FROM $wpdb->users" );
             
@@ -49,7 +50,7 @@ class OKF_Inactive_Users {
                 foreach ($users as $k => $user) {
                     $user_blogs = get_blogs_of_user($user);
 
-                    if ( empty( $user_blogs ) && !is_super_admin($user) ) {
+                    if ( empty( $user_blogs ) && !is_super_admin($user) && !strpos( get_the_author_meta('user_email', $user), 'okfn.org' ) ) {
 
                         $this->inactive_count++;
                         $this->user_list[] = $user;
