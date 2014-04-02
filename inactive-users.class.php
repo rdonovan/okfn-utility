@@ -2,40 +2,40 @@
 
 
 class OKF_Inactive_Users {
-    
+
     const SLUG = 'okf-inactive-users';
     protected $user_list;
     protected $inactive_count;
-	
+
     public static function init() {
         add_action( 'network_admin_menu', array( get_class(), 'network_menu' ) );
     } // end init
-	
+
 
 	/**
 	 * Registers and enqueues admin-specific styles.
 	 */
 	public function register_admin_styles() {
-	
+
             wp_enqueue_style( sprintf( '%s-admin-styles', self::SLUG ), plugin_dir_url( __FILE__ ) . 'css/inactive-users.css' );
-	
+
 	} // end register_admin_styles
-	
-	
+
+
 	/*--------------------------------------------*
 	 * Core Functions
 	 *---------------------------------------------*/
-	
-        function network_menu() { 
-            
+
+        function network_menu() {
+
             add_submenu_page( 'settings.php', 'Inactive Users', 'Inactive Users', 'manage_network', self::SLUG, array( get_class(), 'network_page' ));
-            
+
         }
-        
-        function network_page() { 
+
+        function network_page() {
             include( plugin_dir_path( __FILE__ ) . 'views/inactive-users.php' );
         }
-        
+
         function build_user_list_array($users = false) {
             global $wpdb;
             ini_set('memory_limit','512M');
@@ -45,27 +45,40 @@ class OKF_Inactive_Users {
             $limit = 500;
 
             $users = $wpdb->get_col( "SELECT ID FROM $wpdb->users" );
-            
+
             if ($users) {
                 foreach ($users as $k => $user) {
+                    if ( is_super_admin($user) && strpos( get_the_author_meta('user_email', $user), 'okfn.org' ) ) {
+                        break;
+                    }
                     $user_blogs = get_blogs_of_user($user);
 
-                    if ( empty( $user_blogs ) && !is_super_admin($user) && !strpos( get_the_author_meta('user_email', $user), 'okfn.org' ) ) {
 
-                        $this->inactive_count++;
-                        $this->user_list[] = $user;
-                        if ( $this->inactive_count == $limit ) break;
+                    $spam = True;
+                    // if user has edit permissions, skip
+                    foreach ($user_blogs as $blog) {
+                        switch_to_blog( $blog_id );
+                        if ( !$user_can( $user, 'edit_posts' )) {
+                            $spam = False;
+                            restore_current_blog();
+                            break;
+                        }
+                        restore_current_blog();
+                    }
+                    if (true == $spam) {
+                      $this->inactive_count++;
+                      $this->user_list[] = $user;
                     }
                 }
             }
-            
+
             return $this;
         }
-        
+
         function count_user_list() {
             return $this->inactive_count;
         }
-        
+
         function filter_user_list($per_page, $offset) {
             return array_slice($this->user_list, $offset, $per_page);
         }
@@ -78,7 +91,7 @@ class OKF_Inactive_Users {
                 }
             }
         }
-        
+
         function delete_users( $users = false ) {
             if ($users) {
                 foreach ( $users as $user ) {
@@ -122,8 +135,8 @@ class OKF_Inactive_Users {
         //         $lines .= '"' . str_replace('"', '""', $field_label) . '"' . $separator;
         //     }
         //     $lines.= "\n";
-            
-            
+
+
         //     for ( $i = 1; $i <= ($count/$batch); $i++ ) {
         //     // for ( $i = 1; $i <= 2; $i++ ) {
         //         $users = $wpdb->get_results( $wpdb->prepare("SELECT * FROM $wpdb->users LIMIT %d, %d", $offset, $batch) );
@@ -141,7 +154,7 @@ class OKF_Inactive_Users {
         //                 $lines.= "\n";
         //             }
         //         }
-                
+
         //         $offset += $batch;
         //         if ( !seems_utf8( $lines ) )
         //             $lines = utf8_encode( $lines );
@@ -153,6 +166,6 @@ class OKF_Inactive_Users {
         //     die();
 
         // }
-  
+
 } // end class
 
