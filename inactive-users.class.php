@@ -42,7 +42,7 @@ class OKF_Inactive_Users {
 
             $this->inactive_count = 0;
             $this->user_list = array();
-            $limit = 500;
+            $limit = 50;
 
             $users = $wpdb->get_col( "SELECT ID FROM $wpdb->users" );
 
