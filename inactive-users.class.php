@@ -57,8 +57,8 @@ class OKF_Inactive_Users {
                     $spam = True;
                     // if user has edit permissions, skip
                     foreach ($user_blogs as $blog) {
-                        switch_to_blog( $blog_id );
-                        if ( !$user_can( $user, 'edit_posts' )) {
+                        switch_to_blog( $blog );
+                        if ( !user_can( $user, 'edit_posts' )) {
                             $spam = False;
                             restore_current_blog();
                             break;
