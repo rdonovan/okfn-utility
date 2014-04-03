@@ -49,7 +49,7 @@ class OKF_Inactive_Users {
             if ($users) {
                 foreach ($users as $k => $user) {
                     if ( is_super_admin($user) && strpos( get_the_author_meta('user_email', $user), 'okfn.org' ) ) {
-                        break;
+                        continue;
                     }
                     $user_blogs = get_blogs_of_user($user);
 
