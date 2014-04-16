@@ -42,33 +42,15 @@ class OKF_Inactive_Users {
 
             $this->inactive_count = 0;
             $this->user_list = array();
-            $limit = 50;
+            $limit = 500;
 
-            $users = $wpdb->get_col( "SELECT ID FROM $wpdb->users" );
+            $users =  file('spam-plugin-list.csv', FILE_IGNORE_NEW_LINES);
 
-            if ($users) {
-                foreach ($users as $k => $user) {
-                    if ( is_super_admin($user) && strpos( get_the_author_meta('user_email', $user), 'okfn.org' ) ) {
-                        continue;
-                    }
-                    $user_blogs = get_blogs_of_user($user);
-
-
-                    $spam = True;
-                    // if user has edit permissions, skip
-                    foreach ($user_blogs as $blog) {
-                        switch_to_blog( $blog );
-                        if ( !user_can( $user, 'edit_posts' )) {
-                            $spam = False;
-                            restore_current_blog();
-                            break;
-                        }
-                        restore_current_blog();
-                    }
-                    if (true == $spam) {
-                      $this->inactive_count++;
-                      $this->user_list[] = $user;
-                    }
+            foreach ($users as $user) {
+                $this->inactive_count++;
+                $this->user_list[] = get_userdata($user);
+                if ($this->inactive_count >= $limit) {
+                  break;
                 }
             }
 
