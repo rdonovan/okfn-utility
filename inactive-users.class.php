@@ -47,7 +47,7 @@ class OKF_Inactive_Users {
             $users =  file( plugin_dir_path( __FILE__ ) . 'spam-plugin-list.csv', FILE_IGNORE_NEW_LINES);
 
             foreach ($users as $user) {
-                if ( get_user_by('id', $user) == false ) {
+                if ( get_user_by('id', $user) != false ) {
                     $this->inactive_count++;
                     $this->user_list[] = $user;
                     if ($this->inactive_count >= $limit) {
