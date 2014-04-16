@@ -48,7 +48,7 @@ class OKF_Inactive_Users {
 
             foreach ($users as $user) {
                 $this->inactive_count++;
-                $this->user_list[] = get_userdata($user);
+                $this->user_list[] = $user;
                 if ($this->inactive_count >= $limit) {
                   break;
                 }
